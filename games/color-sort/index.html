@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101426">
+<meta name="description" content="Sort the colorful layers into matching tubes in this relaxing logic puzzle.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="game.css">
+<title>Color Sort — Mini Game Arcade</title>
+</head>
+<body>
+<main class="sort-shell">
+<header class="topbar"><a class="brand" href="../../index.html"><span class="brand-mark">✳</span><span>MINI <span class="brand-light">ARCADE</span></span></a><span class="mode-pill"><i></i> PUZZLE MODE</span></header>
+<section class="intro"><div><p class="eyebrow">SLOW DOWN. THINK AHEAD.</p><h1>Sort the colors.<br><em>Clear your mind.</em></h1><p class="subhead">Pour one layer at a time until every tube holds a single color.</p></div><div class="level-card"><small>LEVEL</small><strong id="level">01</strong></div></section>
+<section class="game-layout">
+<div class="main-column">
+<div class="stats"><div class="stat"><span>TIME LEFT</span><strong id="timer">03:00</strong></div><div class="stat"><span>MOVES</span><strong id="moves">0</strong></div><div class="stat"><span>TUBES SORTED</span><strong id="sorted">0 <small>/ 3</small></strong></div></div>
+<div class="puzzle-panel"><div class="panel-heading"><span><i></i> COLOR LAB</span><span id="status" aria-live="polite">SELECT A TUBE TO BEGIN</span></div><div class="tube-board" id="tubeBoard" aria-label="Color sorting tubes"></div>
+<div class="overlay" id="startOverlay"><div class="overlay-card"><div class="color-orbit" aria-hidden="true"><b></b><b></b><b></b><b></b></div><p class="eyebrow">A LITTLE COLOR LOGIC</p><h2>One color<br><em>per tube.</em></h2><p>Tap a tube to pick it up, then tap another tube to pour. Only matching colors can mix, and each tube holds four layers.</p><button class="primary" id="startButton">Start sorting <span>→</span></button></div></div>
+<div class="overlay hidden" id="endOverlay" role="dialog" aria-modal="true" aria-labelledby="endTitle"><div class="overlay-card"><div class="end-icon" id="endIcon">✦</div><p class="eyebrow" id="endEyebrow">LEVEL COMPLETE</p><h2 id="endTitle">Beautifully sorted!</h2><p id="endMessage">Every color found its place.</p><div class="result-stats"><div><small>MOVES</small><strong id="finalMoves">0</strong></div><div><small>TIME LEFT</small><strong id="finalTime">0:00</strong></div></div><button class="primary" id="nextButton">Next level <span>→</span></button></div></div>
+</div>
+<div class="controls"><p><span class="help-dot"></span> Select a tube, then select a destination. Keyboard: Tab, Enter or Space.</p><div><button class="secondary" id="undoButton" type="button" disabled>↶ Undo</button><button class="secondary" id="restartButton" type="button">↻ Restart</button></div></div>
+</div>
+<aside class="side-panel"><section class="side-card"><h2>✧ HOW TO PLAY</h2><ol><li><b>Pick a tube</b><small>Tap or focus a tube to select it.</small></li><li><b>Pour a color</b><small>Choose an empty tube or one topped with the same color.</small></li><li><b>Sort every layer</b><small>Fill each tube with four layers of one color.</small></li></ol></section><section class="tip-card"><b>✦ THINK AHEAD</b><p>Use the empty tube as a temporary space. Undo is here if your plan needs a rethink.</p><span>✳</span></section></aside>
+</section>
+<footer class="page-footer"><span>© 2026 COLOR SORT ARCADE</span><a href="../../index.html">← BACK TO THE ARCADE</a></footer>
+</main><script src="game.js" defer></script>
+</body></html>
