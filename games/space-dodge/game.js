@@ -23,12 +23,18 @@
   function finish(won){if(state!=='running')return;state=won?'won':'over';cancelAnimationFrame(raf);pauseButton.disabled=true;const finalScore=score;if(finalScore>best){best=finalScore;localStorage.setItem('spaceDodgeBest',String(best));bestEl.textContent=String(best);}if(won){showOverlay('MISSION COMPLETE','You made it!','You survived the asteroid field and scored '+score+' points. Stellar flying!','Play again →');status.textContent='Mission complete! Final score '+score+'.';}else{showOverlay('SHIP DISABLED','Mission over','You scored '+score+' points. Watch the asteroid patterns and give it another try.','Try again ↻');status.textContent='Ship disabled. Final score '+score+'.';}}
   function spawnAsteroid(){const r=17+Math.random()*22;rocks.push({x:35+Math.random()*(W-70),y:-r,r,vy:170+Math.random()*100+elapsed*3,vx:(Math.random()-.5)*65,spin:Math.random()*6,rot:(Math.random()-.5)*2});spawnRock=Math.max(.28,.82-elapsed*.006)+Math.random()*.38;}
   function hit(a,b,pad=0){return Math.hypot(a.x-b.x,a.y-b.y)<a.r+b.r-pad;}
-  function update(dt){elapsed+=dt;spawnRock-=dt;spawnOrb-=dt;if(spawnRock<=0)spawnAsteroid();if(spawnOrb<=0)spawnOrbFn();ship.x+=(Number(right||keys.ArrowRight||keys.KeyD)-Number(left||keys.ArrowLeft||keys.KeyA))*ship.speed*dt;ship.x=Math.max(28,Math.min(W-28,ship.x));
+  function update(dt){
+    const previousElapsed=elapsed;
+    elapsed+=dt;
+    // Award survival points from elapsed-time milestones, not per-frame rounding.
+    // This reliably awards 2 points per second across variable frame rates.
+    score+=Math.floor(elapsed*2)-Math.floor(previousElapsed*2);
+    spawnRock-=dt;spawnOrb-=dt;if(spawnRock<=0)spawnAsteroid();if(spawnOrb<=0)spawnOrbFn();ship.x+=(Number(right||keys.ArrowRight||keys.KeyD)-Number(left||keys.ArrowLeft||keys.KeyA))*ship.speed*dt;ship.x=Math.max(28,Math.min(W-28,ship.x));
     for(const rock of rocks){rock.y+=rock.vy*dt;rock.x+=rock.vx*dt;rock.spin+=rock.rot*dt;}
     for(const orb of orbs){orb.y+=orb.vy*dt;orb.phase+=dt*4;}
     for(let i=rocks.length-1;i>=0;i--){const rock=rocks[i];if(hit(ship,rock,4)){rocks.splice(i,1);lives--;status.textContent='Asteroid impact! '+lives+' shields left.';updateHud();if(lives<=0){finish(false);return;}}else if(rock.y-rock.r>H)rocks.splice(i,1);}
     for(let i=orbs.length-1;i>=0;i--){const orb=orbs[i];if(hit(ship,orb,-2)){orbs.splice(i,1);score+=25;status.textContent='Energy collected! +25 points.';}else if(orb.y-orb.r>H)orbs.splice(i,1);}
-    score+=Math.floor(dt*2);updateHud();if(elapsed>=DURATION){elapsed=DURATION;updateHud();finish(true);}
+    updateHud();if(elapsed>=DURATION){elapsed=DURATION;updateHud();finish(true);}
   }
   function spawnOrbFn(){orbs.push({x:30+Math.random()*(W-60),y:-20,r:10,vy:150+elapsed*2,phase:0});spawnOrb=2.2+Math.random()*1.6;}
   function pathShip(){ctx.save();ctx.translate(ship.x,ship.y);ctx.fillStyle='#c8f36b';ctx.strokeStyle='#efffc4';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-25);ctx.lineTo(20,19);ctx.lineTo(0,11);ctx.lineTo(-20,19);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#8bd8ef';ctx.beginPath();ctx.ellipse(0,-3,6,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ff91ad';ctx.beginPath();ctx.moveTo(-7,19);ctx.lineTo(0,32+Math.random()*5);ctx.lineTo(7,19);ctx.closePath();ctx.fill();ctx.restore();}
