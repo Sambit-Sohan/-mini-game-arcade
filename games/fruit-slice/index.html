@@ -47,7 +47,7 @@
         <div class="arena-wrap">
           <canvas id="gameCanvas" aria-label="Game area. Swipe across fruit to slice it. Avoid bombs." tabindex="0"></canvas>
           <div class="arena-vignette" aria-hidden="true"></div>
-          <div class="arena-topline"><span><i></i> LIVE ROUND</span><span id="roundLabel">ROUND 01</span></div>
+          <div class="arena-topline"><span><i></i> LIVE ROUND</span><span id="roundLabel">NORMAL · ROUND 01</span></div>
 
           <div class="overlay" id="startOverlay">
             <div class="overlay-card intro-card">
@@ -55,6 +55,7 @@
               <p class="eyebrow">READY, SET, SLICE</p>
               <h2>Make every<br><em>swipe count.</em></h2>
               <p class="overlay-copy">Swipe through the fruit to rack up points. Chain slices for bigger combos, but keep clear of the bombs!</p>
+              <div class="difficulty-picker"><label for="difficultySelect">DIFFICULTY</label><select id="difficultySelect"><option value="easy">Easy · Relaxed</option><option value="normal" selected>Normal · Classic</option><option value="hard">Hard · Expert</option></select></div>
               <div class="howto-row"><span class="gesture-icon">↗</span><span><b>SWIPE TO SLICE</b><small>Mouse, touch or trackpad</small></span><span class="bomb-mini">✹</span><span><b>AVOID BOMBS</b><small>Three strikes and it's over</small></span></div>
               <button class="primary-button" id="startButton" type="button">Start slicing <span>→</span></button>
               <p class="key-hint">PRESS <kbd>ENTER</kbd> TO START</p>
