@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5175181056463651" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101426">
+  <meta name="description" content="Pilot through an asteroid field, collect energy orbs and survive the full mission in Space Dodge.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="game.css">
+  <title>Space Dodge — Mini Game Arcade</title>
+</head>
+<body>
+  <main class="space-shell">
+    <header class="topbar">
+      <a class="brand" href="../../index.html" aria-label="Mini Game Arcade home"><span class="brand-mark" aria-hidden="true">✳</span><span>MINI <span class="brand-light">ARCADE</span></span></a>
+      <a class="back-link" href="../../index.html#games">← All games</a>
+    </header>
+    <section class="intro">
+      <div><p class="eyebrow">ARCADE · REFLEX</p><h1>Space <em>Dodge.</em></h1><p class="subhead">Pilot your little ship through the asteroid field. Collect energy, avoid collisions, and survive the 60-second mission.</p></div>
+      <div class="best-pill">BEST SCORE<strong id="bestScore">0</strong></div>
+    </section>
+    <section class="game-panel" aria-label="Space Dodge game">
+      <div class="stats">
+        <div><span>TIME LEFT</span><strong id="timer">60s</strong></div>
+        <div><span>SCORE</span><strong id="score">0</strong></div>
+        <div><span>SHIELDS</span><strong id="lives" aria-label="3 shields">♥ ♥ ♥</strong></div>
+      </div>
+      <div class="stage-wrap">
+        <canvas id="gameCanvas" width="900" height="520" tabindex="0" role="img" aria-label="Space Dodge playfield. Use arrow keys or A and D to move your ship, dodge asteroids and collect energy orbs."></canvas>
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <p class="eyebrow" id="overlayEyebrow">MISSION CONTROL</p>
+            <h2 id="overlayTitle">Ready for launch?</h2>
+            <p id="overlayText">Move left and right to dodge the incoming asteroids. Collect glowing energy orbs for bonus points. Survive for 60 seconds to complete your mission.</p>
+            <button class="action primary" id="startButton" type="button">Start mission →</button>
+          </div>
+        </div>
+      </div>
+      <div class="controls-row">
+        <p class="game-status" id="gameStatus" role="status" aria-live="polite">Mission ready. Your ship has three shields.</p>
+        <div class="actions"><button class="action secondary" id="pauseButton" type="button" disabled>Pause</button><button class="action secondary" id="restartButton" type="button">↻ Restart</button></div>
+      </div>
+      <div class="touch-controls" aria-label="Touch movement controls">
+        <button class="move-button" id="leftButton" type="button" aria-label="Move ship left">←</button>
+        <span>STEER YOUR SHIP</span>
+        <button class="move-button" id="rightButton" type="button" aria-label="Move ship right">→</button>
+      </div>
+      <p class="help">MOVE <kbd>←</kbd> <kbd>→</kbd> OR <kbd>A</kbd> <kbd>D</kbd><span>·</span> PAUSE <kbd>P</kbd> / <kbd>ESC</kbd><span>·</span> TOUCH CONTROLS ON MOBILE</p>
+    </section>
+    <p class="footnote">A tiny original space-survival challenge. Keep moving, pilot!</p>
+  </main>
+  <script src="game.js" defer></script>
+</body>
+</html>
