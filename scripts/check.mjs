@@ -8,12 +8,12 @@ const requiredFiles = [
   'index.html', 'site.css', 'site.js', 'privacy.html', 'terms.html',
   'games/fruit-slice/index.html', 'games/fruit-slice/game.css',
   'games/fruit-slice/game.js', 'games/memory-match/index.html',
-  'games/memory-match/game.css', 'games/memory-match/game.js',
-  'assets/fruit-slice.svg', 'assets/memory-match.svg', 'assets/favicon.svg'
+  'games/memory-match/game.css', 'games/memory-match/game.js', 'games/color-sort/index.html', 'games/color-sort/game.css', 'games/color-sort/game.js',
+  'assets/fruit-slice.svg', 'assets/memory-match.svg', 'assets/color-sort.svg', 'assets/favicon.svg'
 ];
 for (const file of requiredFiles) await access(join(root, file));
 
-const htmlFiles = ['index.html', 'privacy.html', 'terms.html', 'games/fruit-slice/index.html', 'games/memory-match/index.html'];
+const htmlFiles = ['index.html', 'privacy.html', 'terms.html', 'games/fruit-slice/index.html', 'games/memory-match/index.html', 'games/color-sort/index.html'];
 const problems = [];
 for (const file of htmlFiles) {
   const source = await readFile(join(root, file), 'utf8');
@@ -30,7 +30,7 @@ for (const file of htmlFiles) {
 }
 const home = await readFile(join(root, 'index.html'), 'utf8');
 const fruit = await readFile(join(root, 'games/fruit-slice/index.html'), 'utf8');
-for (const token of ['href="#games"', 'href="#about"', 'href="#contact"', 'href="privacy.html"', 'href="terms.html"', 'href="games/fruit-slice/"', 'assets/fruit-slice.svg', 'href="games/memory-match/"', 'assets/memory-match.svg']) {
+for (const token of ['href="#games"', 'href="#about"', 'href="#contact"', 'href="privacy.html"', 'href="terms.html"', 'href="games/fruit-slice/"', 'assets/fruit-slice.svg', 'href="games/memory-match/"', 'assets/memory-match.svg', 'href="games/color-sort/"', 'assets/color-sort.svg']) {
   if (!home.includes(token)) problems.push(`Homepage missing required content/link: ${token}`);
 }
 for (const token of ['id="gameCanvas"', 'id="startButton"', 'id="pauseButton"', 'id="restartButton"', 'id="resumeButton"', 'id="soundToggle"', 'src="game.js"', 'href="game.css"']) {
@@ -45,7 +45,7 @@ for (const token of ['function shuffle(', 'function startGame(', 'function flipC
   if (!memoryScript.includes(token)) problems.push(`Memory Match gameplay missing required behavior: ${token}`);
 }
 if (/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(home + fruit + memoryPage)) problems.push('Unexpected remote font dependency in page markup');
-for (const file of ['site.js', 'games/fruit-slice/game.js', 'games/memory-match/game.js', 'scripts/build.mjs']) {
+for (const file of ['site.js', 'games/fruit-slice/game.js', 'games/memory-match/game.js', 'games/color-sort/game.js', 'scripts/build.mjs']) {
   const result = spawnSync(process.execPath, ['--check', join(root, file)], { encoding: 'utf8' });
   if (result.status !== 0) problems.push(`${file}: JavaScript syntax error: ${result.stderr}`);
 }
@@ -53,4 +53,4 @@ if (problems.length) {
   console.error('Validation failed:\n- ' + problems.join('\n- '));
   process.exit(1);
 }
-console.log(`Passed: ${requiredFiles.length} required files exist; ${htmlFiles.length} HTML pages have valid local links/assets; Fruit Slice and Memory Match controls, gameplay hooks, and JavaScript syntax verified.`);
+console.log(`Passed: ${requiredFiles.length} required files exist; ${htmlFiles.length} HTML pages have valid local links/assets; Fruit Slice, Memory Match and Color Sort controls, gameplay hooks, responsive breakpoints, and JavaScript syntax verified.`);
