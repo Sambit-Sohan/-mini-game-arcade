@@ -7,7 +7,7 @@
   const startButton=$('startButton'),pauseButton=$('pauseButton'),restartButton=$('restartButton'),status=$('gameStatus');
   const leftButton=$('leftButton'),rightButton=$('rightButton');
   const W=900,H=520,DURATION=60;
-  const ship={x:W/2,y:H-75,r:19,speed:440};
+  const ship={x:W/2,y:H-112,r:24,speed:440};
   let state='ready',last=0,elapsed=0,score=0,lives=3,spawnRock=0,spawnOrb=1.3,rocks=[],orbs=[],stars=[],raf=0;
   let left=false,right=false,keys={};
   let best=Number(localStorage.getItem('spaceDodgeBest')||0);
@@ -37,7 +37,7 @@
     updateHud();if(elapsed>=DURATION){elapsed=DURATION;updateHud();finish(true);}
   }
   function spawnOrbFn(){orbs.push({x:30+Math.random()*(W-60),y:-20,r:10,vy:150+elapsed*2,phase:0});spawnOrb=2.2+Math.random()*1.6;}
-  function pathShip(){ctx.save();ctx.translate(ship.x,ship.y);ctx.fillStyle='#c8f36b';ctx.strokeStyle='#efffc4';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-25);ctx.lineTo(20,19);ctx.lineTo(0,11);ctx.lineTo(-20,19);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#8bd8ef';ctx.beginPath();ctx.ellipse(0,-3,6,9,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ff91ad';ctx.beginPath();ctx.moveTo(-7,19);ctx.lineTo(0,32+Math.random()*5);ctx.lineTo(7,19);ctx.closePath();ctx.fill();ctx.restore();}
+  function pathShip(){ctx.save();ctx.translate(ship.x,ship.y);ctx.shadowColor='#c8f36b';ctx.shadowBlur=22;ctx.fillStyle='#c8f36b';ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-32);ctx.lineTo(25,23);ctx.lineTo(0,14);ctx.lineTo(-25,23);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#8bd8ef';ctx.strokeStyle='#e7fbff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,-5,8,12,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#ff91ad';ctx.beginPath();ctx.moveTo(-9,23);ctx.lineTo(0,43+Math.sin(elapsed*24)*5);ctx.lineTo(9,23);ctx.closePath();ctx.fill();ctx.restore();}
   function draw(){ctx.clearRect(0,0,W,H);const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#111a35');bg.addColorStop(1,'#202747');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
     for(const star of stars){ctx.globalAlpha=.35+.45*(.5+.5*Math.sin(elapsed*1.5+star.phase));ctx.fillStyle='#eaf4ff';ctx.beginPath();ctx.arc(star.x,(star.y+elapsed*(10+star.r*5))%(H+5),star.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
     for(const rock of rocks){ctx.save();ctx.translate(rock.x,rock.y);ctx.rotate(rock.spin);ctx.fillStyle='#a5abc0';ctx.strokeStyle='#d4d9e8';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<9;i++){const a=i*Math.PI*2/9,r=rock.r*(.78+(i%3)*.1);if(i===0)ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);else ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#707b98';ctx.beginPath();ctx.arc(-rock.r*.2,-rock.r*.1,rock.r*.2,0,Math.PI*2);ctx.fill();ctx.restore();}
