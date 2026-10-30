@@ -33,9 +33,16 @@ const fruit = await readFile(join(root, 'games/fruit-slice/index.html'), 'utf8')
 for (const token of ['href="#games"', 'href="#about"', 'href="#contact"', 'href="privacy.html"', 'href="terms.html"', 'href="games/fruit-slice/"', 'assets/fruit-slice.svg', 'href="games/memory-match/"', 'assets/memory-match.svg', 'href="games/color-sort/"', 'assets/color-sort.svg']) {
   if (!home.includes(token)) problems.push(`Homepage missing required content/link: ${token}`);
 }
-for (const token of ['id="gameCanvas"', 'id="startButton"', 'id="pauseButton"', 'id="restartButton"', 'id="resumeButton"', 'id="soundToggle"', 'src="game.js"', 'href="game.css"']) {
+for (const token of ['id="gameCanvas"', 'id="startButton"', 'id="pauseButton"', 'id="restartButton"', 'id="resumeButton"', 'id="soundToggle"', 'id="difficultySelect"', 'src="game.js"', 'href="game.css"']) {
   if (!fruit.includes(token)) problems.push(`Fruit Slice page missing game control/asset: ${token}`);
 }
+const fruitScript = await readFile(join(root, 'games/fruit-slice/game.js'), 'utf8');
+const fruitCss = await readFile(join(root, 'games/fruit-slice/game.css'), 'utf8');
+for (const token of ['easy:', 'normal:', 'hard:', 'function setDifficulty(', 'bombChance', 'config.spawnBase']) {
+  if (!fruitScript.includes(token)) problems.push(`Fruit Slice missing difficulty behavior: ${token}`);
+}
+if (!fruitCss.includes('.difficulty-picker')) problems.push('Fruit Slice difficulty selector styling is missing');
+
 const colorPage = await readFile(join(root, 'games/color-sort/index.html'), 'utf8');
 const colorScript = await readFile(join(root, 'games/color-sort/game.js'), 'utf8');
 const colorCss = await readFile(join(root, 'games/color-sort/game.css'), 'utf8');
