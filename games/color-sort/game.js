@@ -42,7 +42,7 @@ function chooseTube(index){
  if(!started||finished)return;
  if(selected===-1){if(!tubes[index].length){statusEl.textContent='PICK A TUBE WITH COLOR FIRST';return;}selected=index;statusEl.textContent='NOW CHOOSE WHERE TO POUR';render();return;}
  if(selected===index){selected=-1;statusEl.textContent='SELECTION CLEARED';render();return;}
- if(pour(selected,index)){history.push(lastMove);selected=-1;statusEl.textContent='NICE POUR!';render();if(sortedCount()===colorCount)win();}
+ const before=snapshot();if(pour(selected,index)){history.push(before);selected=-1;statusEl.textContent='NICE POUR!';render();if(sortedCount()===colorCount)win();}
  else{statusEl.textContent=tubes[index].length===4?'THAT TUBE IS FULL':'MATCH THE TOP COLOR';selected=tubes[index].length?index:-1;render();}
 }
 let lastMove=null;
