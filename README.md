@@ -1,6 +1,6 @@
 # Mini Game Arcade
 
-A lightweight, responsive static arcade website with three completed browser games: **Fruit Slice**, **Memory Match** and **Color Sort**. All games run entirely in the browser with no API keys, accounts, database or backend.
+A lightweight, responsive static arcade website with four completed browser games: **Fruit Slice**, **Memory Match**, **Color Sort** and **Jump Runner**. All games run entirely in the browser with no API keys, accounts, database or backend.
 
 ## Run locally
 
@@ -23,7 +23,8 @@ To preview the production output, serve the `dist/` folder with any static serve
 ## Games
 
 - **Fruit Slice** — choose Easy, Normal or Hard, swipe through fruit, build combos, avoid bombs, and play 60-second rounds with lives, pause/restart and sound controls. Difficulty changes fruit speed, spawn frequency and bomb frequency.
-- **Memory Match** — progress through six increasingly difficult boards, from 6 to 16 pairs. Each level has its own timer and best-moves record, with restart, undo-free clean matching, win/time-expired states, and mouse/touch/keyboard controls.
+- **Memory Match** — progress through six increasingly difficult boards, from 6 to 16 pairs. Each level has its own timer and best-moves record, with restart, win/time-expired states, and mouse/touch/keyboard controls.
+- **Jump Runner** — jump over randomly generated hurdles, collect stars, and survive as the speed increases. Includes distance, star and pace counters, pause/resume, restart, a saved best distance, keyboard and touch controls.
 
 ## Add a new game
 
@@ -44,6 +45,7 @@ The catalogue intentionally contains no placeholder cards for unfinished games.
 - `games/fruit-slice/` — Fruit Slice page, styling and gameplay.
 - `games/memory-match/` — Memory Match page, styling and six-level gameplay.
 - `games/color-sort/` — Color Sort page, styling and gameplay.
+- `games/jump-runner/` — Jump Runner page, styling and gameplay.
 - `privacy.html`, `terms.html` — policy pages.
 - `assets/` — original SVG artwork and favicon.
 - `site.css`, `site.js` — shared site styling and navigation.
