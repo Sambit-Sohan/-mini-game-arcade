@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101426">
+  <meta name="description" content="A little corner of the internet for quick, satisfying browser games. Pick a game, jump in, and play.">
+  <title>Mini Game Arcade — Small games, big breaks</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="logo" href="index.html" aria-label="Mini Game Arcade home"><span class="logo-mark" aria-hidden="true">✳</span><span>mini game <b>arcade</b></span></a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <nav class="nav" id="siteNav" aria-label="Main navigation">
+      <a class="active" href="#games">Games</a><a href="#about">About</a><a href="#contact">Contact</a>
+      <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>YOUR QUICK PLAY DESTINATION</p>
+        <h1 id="hero-title">Small games.<br><em>Big breaks.</em></h1>
+        <p class="hero-text">Welcome to Mini Game Arcade — a growing collection of quick, easy-to-pick-up browser games. No downloads, accounts, or complicated setup. Choose a game and enjoy a little reset.</p>
+        <a class="button button-primary" href="#games">Explore the games <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" role="img" aria-label="Original illustration of a cheerful arcade cabinet">
+        <div class="orbit" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+        <span class="spark spark-one" aria-hidden="true">✦</span><span class="spark spark-two" aria-hidden="true">✳</span>
+        <div class="arcade-machine" aria-hidden="true"><div class="machine-top"><span>MINI</span><span>✦</span></div><div class="machine-screen"><span class="screen-sun"></span><span class="screen-star">✦</span><span class="screen-hill hill-one"></span><span class="screen-hill hill-two"></span></div><div class="machine-controls"><i></i><b></b><i></i></div><div class="machine-base"></div></div>
+        <span class="art-caption" aria-hidden="true">PRESS PLAY · TAKE A BREAK</span>
+      </div>
+    </section>
+
+    <section class="section-wrap games-section" id="games" aria-labelledby="games-title">
+      <div class="section-heading"><div><p class="eyebrow">THE GAME SHELF</p><h2 id="games-title">Pick your <em>next play.</em></h2></div><span class="game-count">01 GAME AVAILABLE</span></div>
+      <div class="game-grid">
+        <article class="game-card">
+          <a class="card-art" href="games/fruit-slice/" aria-label="Play Fruit Slice"><img src="assets/fruit-slice.svg" alt="Original illustration of fruit, a slicing trail and a bomb"><span class="art-tag">ARCADE · REFLEX</span></a>
+          <div class="card-content"><div class="card-title-row"><h3>Fruit Slice</h3><span class="status-dot" role="img" aria-label="Playable"></span></div><p>Swipe through flying fruit, chain satisfying combos, and keep your blade away from the bombs. How high can you score in 60 seconds?</p><div class="card-meta"><span>⌁ Mouse or touch</span><span>·</span><span>60-second rounds</span></div><a class="button button-play" href="games/fruit-slice/">Play Fruit Slice <span aria-hidden="true">↗</span></a></div>
+        </article>
+      </div>
+      <p class="coming-note">One game, ready to play. More will join the shelf when they’re finished and tested.</p>
+    </section>
+
+    <section class="section-wrap about-section" id="about" aria-labelledby="about-title">
+      <div class="about-mark" aria-hidden="true">✳</div>
+      <div><p class="eyebrow">A LITTLE ABOUT US</p><h2 id="about-title">Made for the <em>in-between.</em></h2><p>Mini Game Arcade is a small independent collection of original, lightweight browser games. It’s built for the moments between tasks: open a page, learn the controls in seconds, and play. No account or download is needed, and unfinished games stay off the shelf until they’re ready.</p></div>
+    </section>
+
+    <section class="section-wrap contact-section" id="contact" aria-labelledby="contact-title">
+      <div><p class="eyebrow">SAY HELLO</p><h2 id="contact-title">Questions or game ideas?</h2><p>We’d love to hear about a bug, suggestion, or idea for a future mini game.</p></div>
+      <a class="button button-outline" href="mailto:hello@minigamearcade.example">Contact the arcade <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="footer-logo" href="index.html">mini game <b>arcade</b> <span>✳</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="#about">About</a><a href="#contact">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></nav><p>© <span id="year">2026</span> Mini Game Arcade. Made for play.</p></footer>
+</body>
+</html>
