@@ -22,7 +22,7 @@ To preview the production output, serve the `dist/` folder with any static serve
 
 ## Games
 
-- **Fruit Slice** — swipe through fruit, build combos, avoid bombs, and play timed rounds with lives, pause/restart and sound controls.
+- **Fruit Slice** — choose Easy, Normal or Hard, swipe through fruit, build combos, avoid bombs, and play 60-second rounds with lives, pause/restart and sound controls. Difficulty changes fruit speed, spawn frequency and bomb frequency.
 - **Memory Match** — progress through six increasingly difficult boards, from 6 to 16 pairs. Each level has its own timer and best-moves record, with restart, undo-free clean matching, win/time-expired states, and mouse/touch/keyboard controls.
 
 ## Add a new game
