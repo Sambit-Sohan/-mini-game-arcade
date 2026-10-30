@@ -36,6 +36,17 @@ for (const token of ['href="#games"', 'href="#about"', 'href="#contact"', 'href=
 for (const token of ['id="gameCanvas"', 'id="startButton"', 'id="pauseButton"', 'id="restartButton"', 'id="resumeButton"', 'id="soundToggle"', 'src="game.js"', 'href="game.css"']) {
   if (!fruit.includes(token)) problems.push(`Fruit Slice page missing game control/asset: ${token}`);
 }
+const colorPage = await readFile(join(root, 'games/color-sort/index.html'), 'utf8');
+const colorScript = await readFile(join(root, 'games/color-sort/game.js'), 'utf8');
+const colorCss = await readFile(join(root, 'games/color-sort/game.css'), 'utf8');
+for (const token of ['id="tubeBoard"', 'id="timer"', 'id="moves"', 'id="undoButton"', 'id="restartButton"', 'id="nextButton"', 'src="game.js"', 'href="game.css"']) {
+  if (!colorPage.includes(token)) problems.push(`Color Sort page missing required control: ${token}`);
+}
+for (const token of ['function makePuzzle(', 'function pour(', 'function chooseTube(', 'function win(', 'function lose(']) {
+  if (!colorScript.includes(token)) problems.push(`Color Sort gameplay missing required behavior: ${token}`);
+}
+if (!colorCss.includes('@media(max-width:560px)') || !colorCss.includes('@media(max-width:850px)')) problems.push('Color Sort is missing mobile/tablet responsive breakpoints');
+
 const memoryPage = await readFile(join(root, 'games/memory-match/index.html'), 'utf8');
 const memoryScript = await readFile(join(root, 'games/memory-match/game.js'), 'utf8');
 for (const token of ['id="board"', 'id="timer"', 'id="moves"', 'id="restartButton"', 'id="startButton"', 'id="endOverlay"', 'src="game.js"', 'href="game.css"']) {
@@ -44,7 +55,7 @@ for (const token of ['id="board"', 'id="timer"', 'id="moves"', 'id="restartButto
 for (const token of ['function shuffle(', 'function startGame(', 'function flipCard(', 'function finishGame(', 'memoryMatchBestMoves', 'aria-label']) {
   if (!memoryScript.includes(token)) problems.push(`Memory Match gameplay missing required behavior: ${token}`);
 }
-if (/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(home + fruit + memoryPage)) problems.push('Unexpected remote font dependency in page markup');
+if (/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(home + fruit + memoryPage + colorPage)) problems.push('Unexpected remote font dependency in page markup');
 for (const file of ['site.js', 'games/fruit-slice/game.js', 'games/memory-match/game.js', 'games/color-sort/game.js', 'scripts/build.mjs']) {
   const result = spawnSync(process.execPath, ['--check', join(root, file)], { encoding: 'utf8' });
   if (result.status !== 0) problems.push(`${file}: JavaScript syntax error: ${result.stderr}`);
