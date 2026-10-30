@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5175181056463651" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101426">
+  <meta name="description" content="Jump over the hurdles, collect stars and see how far you can run in this quick arcade challenge.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="game.css">
+  <title>Jump Runner — Mini Game Arcade</title>
+</head>
+<body>
+  <main class="runner-shell">
+    <header class="topbar">
+      <a class="brand" href="../../index.html" aria-label="Mini Game Arcade home"><span class="brand-mark" aria-hidden="true">✳</span><span>MINI <span class="brand-light">ARCADE</span></span></a>
+      <a class="back-link" href="../../index.html#games">← All games</a>
+    </header>
+    <section class="intro">
+      <div><p class="eyebrow">ARCADE · REFLEX</p><h1>Ready, set, <em>jump!</em></h1><p class="subhead">Leap over the hurdles, collect glowing stars and see how far your little runner can go.</p></div>
+      <div class="best-pill">BEST DISTANCE <strong id="best">0</strong></div>
+    </section>
+    <section class="game-panel" aria-label="Jump Runner game">
+      <div class="stats" aria-label="Game statistics">
+        <div><span>DISTANCE</span><strong id="distance">0 m</strong></div>
+        <div><span>STARS</span><strong id="stars">0</strong></div>
+        <div><span>PACE</span><strong id="pace">1×</strong></div>
+      </div>
+      <div class="stage-wrap">
+        <canvas id="gameCanvas" width="900" height="360" role="img" aria-label="Jump Runner playfield. Your runner is on the left. Jump over obstacles and collect stars."></canvas>
+        <div class="overlay" id="overlay">
+          <div class="overlay-card"><p class="eyebrow" id="overlayEyebrow">YOUR RUN STARTS HERE</p><h2 id="overlayTitle">Ready to roll?</h2><p id="overlayText">Jump over the blocks and collect stars. One collision ends the run.</p><button class="action primary" id="startButton" type="button">Start running <span aria-hidden="true">→</span></button></div>
+        </div>
+      </div>
+      <div class="controls-row">
+        <p id="gameStatus" class="game-status" aria-live="polite">Press Start, then jump with Space, ↑ or the button.</p>
+        <div class="actions"><button class="action secondary" id="pauseButton" type="button" disabled>Pause</button><button class="action secondary" id="restartButton" type="button">Restart</button></div>
+      </div>
+      <button class="jump-button" id="jumpButton" type="button" aria-label="Jump">JUMP <span aria-hidden="true">↑</span></button>
+      <p class="help">KEYBOARD: <kbd>SPACE</kbd> / <kbd>↑</kbd> TO JUMP <span>·</span> TOUCH: TAP JUMP OR THE PLAYFIELD</p>
+    </section>
+    <p class="footnote">A tiny endless-runner challenge. The pace gradually increases, so stay sharp!</p>
+  </main>
+  <script src="game.js" defer></script>
+</body>
+</html>
