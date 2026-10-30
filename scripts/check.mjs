@@ -52,7 +52,7 @@ const memoryScript = await readFile(join(root, 'games/memory-match/game.js'), 'u
 for (const token of ['id="board"', 'id="timer"', 'id="moves"', 'id="restartButton"', 'id="startButton"', 'id="endOverlay"', 'src="game.js"', 'href="game.css"']) {
   if (!memoryPage.includes(token)) problems.push(`Memory Match page missing required control: ${token}`);
 }
-for (const token of ['function shuffle(', 'function startGame(', 'function flipCard(', 'function finishGame(', 'memoryMatchBestMoves', 'aria-label']) {
+for (const token of ['function shuffle(', 'function startGame(', 'function flipCard(', 'function finishGame(', 'function bestKey(', 'pairs:16', 'memoryMatchBestMovesLevel', 'aria-label']) {
   if (!memoryScript.includes(token)) problems.push(`Memory Match gameplay missing required behavior: ${token}`);
 }
 if (/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(home + fruit + memoryPage + colorPage)) problems.push('Unexpected remote font dependency in page markup');
