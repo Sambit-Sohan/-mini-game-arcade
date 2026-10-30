@@ -1,6 +1,6 @@
 # Mini Game Arcade
 
-A lightweight, responsive static arcade website with two completed browser games: **Fruit Slice** and **Memory Match**. Both games run entirely in the browser with no API keys, accounts, database or backend.
+A lightweight, responsive static arcade website with three completed browser games: **Fruit Slice**, **Memory Match** and **Color Sort**. Both games run entirely in the browser with no API keys, accounts, database or backend.
 
 ## Run locally
 
@@ -42,7 +42,7 @@ The catalogue intentionally contains no placeholder cards for unfinished games.
 
 - `index.html` — homepage and game catalogue.
 - `games/fruit-slice/` — Fruit Slice page, styling and gameplay.
-- `games/memory-match/` — Memory Match page, styling and gameplay.
+- `games/memory-match/ and `games/color-sort/`` — Memory Match page, styling and gameplay.
 - `privacy.html`, `terms.html` — policy pages.
 - `assets/` — original SVG artwork and favicon.
 - `site.css`, `site.js` — shared site styling and navigation.
