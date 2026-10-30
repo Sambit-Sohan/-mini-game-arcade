@@ -116,6 +116,7 @@
   function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-lastFrame)/1000||0,.033);lastFrame=now;
     ctx.clearRect(0,0,width,height);
     if(state==='playing'){
+      const config=DIFFICULTIES[difficulty];
       elapsed+=dt;timeLeft=Math.max(0,timeLeft-dt);spawnClock-=dt;
       if(spawnClock<=0){spawn();if(Math.random()<.27&&elapsed>5)spawn();spawnClock=Math.max(.30,config.spawnBase-elapsed*config.spawnRamp)+rand(.02,.32);}
       for(const e of entities){e.age+=dt;e.x+=e.vx*dt;e.y+=e.vy*dt;e.vy+=850*dt;e.rot+=e.vr*dt;}
