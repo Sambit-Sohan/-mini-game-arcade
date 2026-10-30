@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101426">
+  <meta name="description" content="Find all matching pairs in this quick, colorful memory challenge.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="game.css">
+  <title>Memory Match — Mini Game Arcade</title>
+</head>
+<body>
+  <main class="memory-shell">
+    <header class="topbar">
+      <a class="brand" href="../../index.html" aria-label="Mini Game Arcade home"><span class="brand-mark" aria-hidden="true">✳</span><span>MINI <span class="brand-light">ARCADE</span></span></a>
+      <span class="mode-pill"><i></i> MEMORY MODE</span>
+    </header>
+    <section class="intro">
+      <div><p class="eyebrow">A LITTLE TEST FOR YOUR BRAIN</p><h1>Find your <em>matching pairs.</em></h1><p class="subhead">Flip, remember, match. Clear the board before time runs out.</p></div>
+      <div class="best-card"><span aria-hidden="true">✦</span><div><small>BEST MOVES</small><strong id="bestMoves">—</strong></div></div>
+    </section>
+    <section class="play-layout" aria-label="Memory Match game">
+      <div class="main-column">
+        <div class="stats" aria-label="Game statistics">
+          <div class="stat"><span>TIME LEFT</span><strong id="timer">90<span>s</span></strong></div>
+          <div class="stat"><span>MOVES</span><strong id="moves">0</strong></div>
+          <div class="stat"><span>PAIRS</span><strong id="pairs">0 <small>/ 6</small></strong></div>
+        </div>
+        <div class="board-wrap">
+          <div class="board-heading"><span><i></i> THE MEMORY GRID</span><span id="boardStatus" aria-live="polite">READY WHEN YOU ARE</span></div>
+          <div class="board" id="board" aria-label="Six pairs of cards. Start the game to play." aria-describedby="gameHelp"></div>
+          <div class="game-overlay" id="startOverlay">
+            <div class="overlay-card"><div class="preview-shapes" aria-hidden="true"><span>✦</span><span>●</span><span>◆</span><span>✿</span></div><p class="eyebrow">READY, SET, REMEMBER</p><h2>Make a match.<br><em>Make it count.</em></h2><p>Turn over two cards at a time. Remember their symbols and find all six pairs before the 90-second timer runs out.</p><button class="primary-button" id="startButton" type="button">Start matching <span>→</span></button><small>YOU CAN ALSO PRESS ENTER</small></div>
+          </div>
+          <div class="game-overlay hidden" id="endOverlay" role="dialog" aria-modal="true" aria-labelledby="endTitle">
+            <div class="overlay-card"><div class="end-mark" id="endMark" aria-hidden="true">✦</div><p class="eyebrow" id="endEyebrow">BOARD CLEARED</p><h2 id="endTitle">Brilliant memory!</h2><p id="endMessage">You found every pair.</p><div class="result-stats"><div><small>YOUR MOVES</small><strong id="finalMoves">0</strong></div><div><small>TIME LEFT</small><strong id="finalTime">0s</strong></div></div><button class="primary-button" id="playAgainButton" type="button">Play again <span>↻</span></button></div>
+          </div>
+        </div>
+        <div class="control-row"><p id="gameHelp"><span class="help-dot"></span> Tap, click or focus a card and press Enter / Space to flip it.</p><button class="secondary-button" id="restartButton" type="button">↻ Restart</button></div>
+      </div>
+      <aside class="side-panel">
+        <section class="side-card"><div class="side-title"><span>✧</span> HOW TO PLAY</div><ol><li><b>Flip two cards</b><small>Choose any two cards on the grid.</small></li><li><b>Find a matching pair</b><small>Matching cards stay face up.</small></li><li><b>Clear all six pairs</b><small>Finish before the 90-second timer ends.</small></li></ol></section>
+        <section class="tip-card"><b>✦ MEMORY TIP</b><p>Take a moment to notice where each shape appears. A calm pace can beat a quick guess.</p><span aria-hidden="true">✳</span></section>
+      </aside>
+    </section>
+    <footer class="page-footer"><span>© 2026 MEMORY MATCH ARCADE</span><a href="../../index.html">← BACK TO THE ARCADE</a></footer>
+  </main>
+  <script src="game.js" defer></script>
+</body>
+</html>
