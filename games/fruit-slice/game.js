@@ -12,6 +12,9 @@
     comboPop: $('comboPop')
   };
   const ROUND_SECONDS = 60;
+  const DIFFICULTIES = { easy: { label: 'EASY', bombBase: .04, bombLate: .07, spawnBase: 1.12, spawnRamp: .003, speedBonus: -90, speedRamp: 1 }, normal: { label: 'NORMAL', bombBase: .08, bombLate: .13, spawnBase: .88, spawnRamp: .006, speedBonus: 0, speedRamp: 2 }, hard: { label: 'HARD', bombBase: .15, bombLate: .24, spawnBase: .68, spawnRamp: .009, speedBonus: 90, speedRamp: 3 } };
+  const difficultySelect = $('difficultySelect');
+  let difficulty = 'normal';
   const FRUITS = [
     {emoji:'🍊',color:'#ff9e38',points:10}, {emoji:'🍉',color:'#ff6680',points:10},
     {emoji:'🍓',color:'#fa5b78',points:10}, {emoji:'🥝',color:'#b8d95d',points:10},
@@ -52,7 +55,9 @@
     ui.soundIcon.innerHTML=soundOn?'<path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11"/>':'<path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="m17 9 5 6m0-6-5 6"/>';
   }
   ui.sound.addEventListener('click',()=>{soundOn=!soundOn;updateSoundButton();if(soundOn)sound(620,.06);}); updateSoundButton();
-  function setState(next){state=next;ui.pauseButton.disabled=next!=='playing';ui.status.textContent=next==='playing'?'SWIPE TO SLICE':next==='paused'?'ROUND PAUSED':next==='over'?'ROUND COMPLETE':'SWIPE TO PLAY';}
+  function setState(next){state=next;ui.pauseButton.disabled=next!=='playing';ui.status.textContent=next==='playing'?'SWIPE TO SLICE':next==='paused'?'ROUND PAUSED':next==='over'?'ROUND COMPLETE':'SWIPE TO PLAY';if(difficultySelect)difficultySelect.disabled=next==='playing'||next==='paused';}
+  function setDifficulty(value){difficulty=DIFFICULTIES[value]?value:'normal';if(difficultySelect)difficultySelect.value=difficulty;$('roundLabel').textContent=DIFFICULTIES[difficulty].label+' · ROUND 01';}
+  if(difficultySelect){difficultySelect.addEventListener('change',()=>setDifficulty(difficultySelect.value));setDifficulty(difficultySelect.value);}
   function updateHud(){
     ui.score.textContent=String(score).padStart(4,'0');
     ui.timer.innerHTML=`${Math.ceil(timeLeft)}<span>s</span>`;
@@ -64,7 +69,7 @@
     ui.comboText.textContent=combo>=5?'On fire! Keep that streak alive.':combo>1?`${combo} slices chained. Keep it going!`:'Slice fruit in quick succession to build your streak.';
   }
   function reset(){score=0;lives=3;timeLeft=ROUND_SECONDS;entities=[];particles=[];trail=[];elapsed=0;spawnClock=.25;lastSliceAt=0;combo=0;comboClock=0;gameEndReason='time';updateHud();}
-  function start(){reset();ui.start.classList.add('hidden');ui.pause.classList.add('hidden');ui.over.classList.add('hidden');setState('playing');lastFrame=performance.now();canvas.focus({preventScroll:true});sound(520,.09);}
+  function start(){setDifficulty(difficultySelect?difficultySelect.value:difficulty);reset();ui.start.classList.add('hidden');ui.pause.classList.add('hidden');ui.over.classList.add('hidden');setState('playing');lastFrame=performance.now();canvas.focus({preventScroll:true});sound(520,.09);}
   function pause(){if(state!=='playing')return;setState('paused');ui.pause.classList.remove('hidden');pointerDown=false;trail=[];}
   function resume(){if(state!=='paused')return;ui.pause.classList.add('hidden');setState('playing');lastFrame=performance.now();}
   function end(reason){if(state==='over')return;gameEndReason=reason;setState('over');pointerDown=false;trail=[];
@@ -75,10 +80,12 @@
     ui.over.classList.remove('hidden');sound(170,.22,'triangle',.045);updateHud();
   }
   function spawn(){
-    const bomb=Math.random()<(elapsed>12?.13:.08);
+    const config=DIFFICULTIES[difficulty];
+    const bombChance=elapsed>12?config.bombLate:config.bombBase;
+    const bomb=Math.random()<bombChance;
     const fruit=FRUITS[Math.floor(Math.random()*FRUITS.length)];
     const radius=rand(22,31), x=rand(radius+12,width-radius-12);
-    const y=height+radius+8, vx=rand(-125,125), vy=-rand(590,760)-Math.min(elapsed*2,100);
+    const y=height+radius+8, vx=rand(-125,125), vy=-rand(590+config.speedBonus,760+config.speedBonus)-Math.min(elapsed*config.speedRamp,150);
     entities.push({x,y,vx,vy,r:radius,rot:rand(-.5,.5),vr:rand(-2.4,2.4),bomb,fruit,alive:true,age:0});
   }
   function burst(x,y,color,bomb=false){
@@ -110,7 +117,7 @@
     ctx.clearRect(0,0,width,height);
     if(state==='playing'){
       elapsed+=dt;timeLeft=Math.max(0,timeLeft-dt);spawnClock-=dt;
-      if(spawnClock<=0){spawn();if(Math.random()<.27&&elapsed>5)spawn();spawnClock=Math.max(.38,.88-elapsed*.006)+rand(.02,.32);}
+      if(spawnClock<=0){spawn();if(Math.random()<.27&&elapsed>5)spawn();spawnClock=Math.max(.30,config.spawnBase-elapsed*config.spawnRamp)+rand(.02,.32);}
       for(const e of entities){e.age+=dt;e.x+=e.vx*dt;e.y+=e.vy*dt;e.vy+=850*dt;e.rot+=e.vr*dt;}
       entities=entities.filter(e=>e.y<height+e.r+30&&e.alive);
       if(comboClock>0){comboClock-=dt;if(comboClock<=0){combo=0;updateHud();}}
