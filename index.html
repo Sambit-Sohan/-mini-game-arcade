@@ -1,64 +1,91 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101426">
-  <meta name="description" content="A little corner of the internet for quick, satisfying browser games. Pick a game, jump in, and play.">
-  <title>Mini Game Arcade — Small games, big breaks</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="site.css">
-  <script src="site.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#101a2b" />
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta name="description" content="A bright, fast fruit-slicing arcade game. Swipe, score combos, and dodge bombs." />
+  <title>Fruit Slice — Mini Game Arcade</title>
+  <link rel="stylesheet" href="game.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <a class="logo" href="index.html" aria-label="Mini Game Arcade home"><span class="logo-mark" aria-hidden="true">✳</span><span>mini game <b>arcade</b></span></a>
-    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation"><span></span><span></span><span></span></button>
-    <nav class="nav" id="siteNav" aria-label="Main navigation">
-      <a class="active" href="#games">Games</a><a href="#about">About</a><a href="#contact">Contact</a>
-      <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
-    </nav>
-  </header>
-
-  <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>YOUR QUICK PLAY DESTINATION</p>
-        <h1 id="hero-title">Small games.<br><em>Big breaks.</em></h1>
-        <p class="hero-text">Welcome to Mini Game Arcade — a growing collection of quick, easy-to-pick-up browser games. No downloads, accounts, or complicated setup. Choose a game and enjoy a little reset.</p>
-        <a class="button button-primary" href="#games">Explore the games <span aria-hidden="true">↓</span></a>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="../../index.html" aria-label="Mini Game Arcade home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>MINI<span class="brand-light"> ARCADE</span></span>
+      </a>
+      <div class="top-actions">
+        <span class="mode-pill"><span class="live-dot"></span> ARCADE MODE</span>
+        <button class="icon-button" id="soundToggle" type="button" aria-label="Turn sound off" title="Toggle sound">
+          <svg id="soundIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11"/></svg>
+        </button>
       </div>
-      <div class="hero-art" role="img" aria-label="Original illustration of a cheerful arcade cabinet">
-        <div class="orbit" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
-        <span class="spark spark-one" aria-hidden="true">✦</span><span class="spark spark-two" aria-hidden="true">✳</span>
-        <div class="arcade-machine" aria-hidden="true"><div class="machine-top"><span>MINI</span><span>✦</span></div><div class="machine-screen"><span class="screen-sun"></span><span class="screen-star">✦</span><span class="screen-hill hill-one"></span><span class="screen-hill hill-two"></span></div><div class="machine-controls"><i></i><b></b><i></i></div><div class="machine-base"></div></div>
-        <span class="art-caption" aria-hidden="true">PRESS PLAY · TAKE A BREAK</span>
+    </header>
+
+    <section class="intro" id="home">
+      <div>
+        <p class="eyebrow">THE FRESHEST ARCADE CHALLENGE</p>
+        <h1>Slice into the <span>good stuff.</span></h1>
+        <p class="subhead">Quick reflexes. Juicy combos. Zero mess.</p>
+      </div>
+      <div class="best-card">
+        <span class="best-icon">🏆</span>
+        <div><small>PERSONAL BEST</small><strong id="bestScore">0000</strong></div>
       </div>
     </section>
 
-    <section class="section-wrap games-section" id="games" aria-labelledby="games-title">
-      <div class="section-heading"><div><p class="eyebrow">THE GAME SHELF</p><h2 id="games-title">Pick your <em>next play.</em></h2></div><span class="game-count">01 GAME AVAILABLE</span></div>
-      <div class="game-grid">
-        <article class="game-card">
-          <a class="card-art" href="games/fruit-slice/" aria-label="Play Fruit Slice"><img src="assets/fruit-slice.svg" alt="Original illustration of fruit, a slicing trail and a bomb"><span class="art-tag">ARCADE · REFLEX</span></a>
-          <div class="card-content"><div class="card-title-row"><h3>Fruit Slice</h3><span class="status-dot" role="img" aria-label="Playable"></span></div><p>Swipe through flying fruit, chain satisfying combos, and keep your blade away from the bombs. How high can you score in 60 seconds?</p><div class="card-meta"><span>⌁ Mouse or touch</span><span>·</span><span>60-second rounds</span></div><a class="button button-play" href="games/fruit-slice/">Play Fruit Slice <span aria-hidden="true">↗</span></a></div>
-        </article>
+    <section class="game-layout" aria-label="Fruit slicing game">
+      <div class="game-column">
+        <div class="hud" aria-label="Game statistics">
+          <div class="hud-stat score-stat"><span class="hud-label">SCORE</span><strong id="score">0000</strong></div>
+          <div class="hud-stat timer-stat"><span class="hud-label">TIME LEFT</span><strong id="timer">60<span>s</span></strong></div>
+          <div class="hud-stat lives-stat"><span class="hud-label">LIVES</span><strong id="lives" aria-label="3 lives">♥ ♥ ♥</strong></div>
+        </div>
+
+        <div class="arena-wrap">
+          <canvas id="gameCanvas" aria-label="Game area. Swipe across fruit to slice it. Avoid bombs." tabindex="0"></canvas>
+          <div class="arena-vignette" aria-hidden="true"></div>
+          <div class="arena-topline"><span><i></i> LIVE ROUND</span><span id="roundLabel">ROUND 01</span></div>
+
+          <div class="overlay" id="startOverlay">
+            <div class="overlay-card intro-card">
+              <div class="fruit-orbit" aria-hidden="true"><span>🍊</span><span>🍉</span><span>🍓</span><span>🥝</span></div>
+              <p class="eyebrow">READY, SET, SLICE</p>
+              <h2>Make every<br><em>swipe count.</em></h2>
+              <p class="overlay-copy">Swipe through the fruit to rack up points. Chain slices for bigger combos, but keep clear of the bombs!</p>
+              <div class="howto-row"><span class="gesture-icon">↗</span><span><b>SWIPE TO SLICE</b><small>Mouse, touch or trackpad</small></span><span class="bomb-mini">✹</span><span><b>AVOID BOMBS</b><small>Three strikes and it's over</small></span></div>
+              <button class="primary-button" id="startButton" type="button">Start slicing <span>→</span></button>
+              <p class="key-hint">PRESS <kbd>ENTER</kbd> TO START</p>
+            </div>
+          </div>
+
+          <div class="overlay hidden" id="pauseOverlay">
+            <div class="overlay-card compact-card"><div class="pause-symbol">Ⅱ</div><p class="eyebrow">TAKE A BREATHER</p><h2>Game paused</h2><p class="overlay-copy">Your fruit is waiting. Jump back in when you're ready.</p><button class="primary-button" id="resumeButton" type="button">Resume game <span>→</span></button><button class="text-button" id="pauseRestartButton" type="button">Restart round</button></div>
+          </div>
+
+          <div class="overlay hidden" id="gameOverOverlay">
+            <div class="overlay-card compact-card"><div class="gameover-emoji">🍉</div><p class="eyebrow">ROUND COMPLETE</p><h2 id="gameOverTitle">Juicy effort!</h2><p class="overlay-copy" id="gameOverMessage">You made a splash.</p><div class="final-score"><small>YOUR SCORE</small><strong id="finalScore">0000</strong><span id="newBest" class="new-best hidden">✦ NEW PERSONAL BEST</span></div><button class="primary-button" id="restartButton" type="button">Play again <span>↻</span></button><p class="key-hint">PRESS <kbd>ENTER</kbd> TO PLAY AGAIN</p></div>
+          </div>
+
+          <div class="combo-pop hidden" id="comboPop">2× COMBO!</div>
+          <div class="arena-bottomline"><span>✦ FRESH FRUIT ONLY</span><span id="statusHint">SWIPE TO PLAY</span></div>
+        </div>
+        <div class="control-bar">
+          <div class="control-note"><span class="control-dot"></span><span>Mouse / touch: swipe fruit · Avoid bombs · Enter: start · Space: pause · M: mute</span></div>
+          <div class="control-buttons"><button class="secondary-button" id="pauseButton" type="button" disabled><span>Ⅱ</span> Pause</button><button class="secondary-button restart-small" id="restartSmall" type="button"><span>↻</span> Restart</button></div>
+        </div>
       </div>
-      <p class="coming-note">One game, ready to play. More will join the shelf when they’re finished and tested.</p>
-    </section>
 
-    <section class="section-wrap about-section" id="about" aria-labelledby="about-title">
-      <div class="about-mark" aria-hidden="true">✳</div>
-      <div><p class="eyebrow">A LITTLE ABOUT US</p><h2 id="about-title">Made for the <em>in-between.</em></h2><p>Mini Game Arcade is a small independent collection of original, lightweight browser games. It’s built for the moments between tasks: open a page, learn the controls in seconds, and play. No account or download is needed, and unfinished games stay off the shelf until they’re ready.</p></div>
+      <aside class="side-panel">
+        <div class="side-card combo-card"><div class="side-card-heading"><span class="mini-icon combo-icon">✦</span><span>COMBO METER</span></div><div class="combo-number" id="comboNumber">0<span>×</span></div><p id="comboText">Slice fruit in quick succession to build your streak.</p><div class="combo-track"><div id="comboFill"></div></div></div>
+        <div class="side-card rules-card"><div class="side-card-heading"><span class="mini-icon">✧</span><span>THE RULES</span></div><div class="rule-row"><span class="rule-emoji">🍓</span><div><b>Slice fruit</b><small>+10 points each</small></div></div><div class="rule-row"><span class="rule-emoji">⚡</span><div><b>Build a combo</b><small>Bonus points for streaks</small></div></div><div class="rule-row"><span class="rule-emoji">💣</span><div><b>Miss a bomb</b><small>Lose one life if sliced</small></div></div></div>
+        <div class="tip-card"><span>✦ PRO TIP</span><p>Don't chase every fruit. Smooth, controlled swipes help you land bigger combos.</p><div class="tip-spark">✳</div></div>
+      </aside>
     </section>
-
-    <section class="section-wrap contact-section" id="contact" aria-labelledby="contact-title">
-      <div><p class="eyebrow">SAY HELLO</p><h2 id="contact-title">Questions or game ideas?</h2><p>We’d love to hear about a bug, suggestion, or idea for a future mini game.</p></div>
-      <a class="button button-outline" href="mailto:hello@minigamearcade.example">Contact the arcade <span aria-hidden="true">↗</span></a>
-    </section>
+    <footer class="footer"><span>© 2026 FRUIT SLICE ARCADE</span><span>MADE FOR QUICK BREAKS <b>♥</b></span></footer>
   </main>
-
-  <footer class="site-footer"><a class="footer-logo" href="index.html">mini game <b>arcade</b> <span>✳</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="#about">About</a><a href="#contact">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></nav><p>© <span id="year">2026</span> Mini Game Arcade. Made for play.</p></footer>
+  <script src="game.js" defer></script>
 </body>
 </html>
