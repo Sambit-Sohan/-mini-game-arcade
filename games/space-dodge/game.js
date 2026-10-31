@@ -9,12 +9,12 @@
   const W=900,H=520,DURATION=60;
   const ship={x:W/2,y:H-112,r:24,speed:440};
   let state='ready',last=0,elapsed=0,score=0,lives=3,spawnRock=0,spawnOrb=1.3,rocks=[],orbs=[],stars=[],raf=0;
-  let left=false,right=false,keys={},pointerActive=false,targetX=ship.x;
+  let left=false,right=false,keys={},pointerActive=false,targetX=ship.x,targetY=ship.y;
   let best=Number(localStorage.getItem('spaceDodgeBest')||0);
   bestEl.textContent=String(best);
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   for(let i=0;i<75;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:.5+Math.random()*1.5,phase:Math.random()*6.28});
-  function reset(){elapsed=0;score=0;lives=3;spawnRock=.4;spawnOrb=1.2;rocks=[];orbs=[];ship.x=W/2;targetX=ship.x;pointerActive=false;left=false;right=false;updateHud();draw();}
+  function reset(){elapsed=0;score=0;lives=3;spawnRock=.4;spawnOrb=1.2;rocks=[];orbs=[];ship.x=W/2;ship.y=H-112;targetX=ship.x;targetY=ship.y;pointerActive=false;left=false;right=false;updateHud();draw();}
   function updateHud(){timerEl.textContent=Math.ceil(Math.max(0,DURATION-elapsed))+'s';scoreEl.textContent=String(score);livesEl.textContent='♥ '.repeat(lives).trim()+'♡ '.repeat(3-lives).trim();livesEl.setAttribute('aria-label',lives+' of 3 shields remaining');}
   function showOverlay(label,heading,copy,button){overlay.hidden=false;eyebrow.textContent=label;title.textContent=heading;message.textContent=copy;startButton.textContent=button;}
   function hideOverlay(){overlay.hidden=true;}
@@ -29,7 +29,7 @@
     // Award survival points from elapsed-time milestones, not per-frame rounding.
     // This reliably awards 2 points per second across variable frame rates.
     score+=Math.floor(elapsed*2)-Math.floor(previousElapsed*2);
-    spawnRock-=dt;spawnOrb-=dt;if(spawnRock<=0)spawnAsteroid();if(spawnOrb<=0)spawnOrbFn();const direction=Number(right||keys.ArrowRight||keys.KeyD)-Number(left||keys.ArrowLeft||keys.KeyA);if(direction!==0){pointerActive=false;ship.x+=direction*ship.speed*dt;}else if(pointerActive){ship.x+=(targetX-ship.x)*Math.min(1,dt*12);}ship.x=Math.max(28,Math.min(W-28,ship.x));
+    spawnRock-=dt;spawnOrb-=dt;if(spawnRock<=0)spawnAsteroid();if(spawnOrb<=0)spawnOrbFn();const direction=Number(right||keys.ArrowRight||keys.KeyD)-Number(left||keys.ArrowLeft||keys.KeyA);if(direction!==0){pointerActive=false;ship.x+=direction*ship.speed*dt;}else if(pointerActive){const follow=Math.min(1,dt*9);ship.x+=(targetX-ship.x)*follow;ship.y+=(targetY-ship.y)*follow;}ship.x=Math.max(28,Math.min(W-28,ship.x));ship.y=Math.max(45,Math.min(H-38,ship.y));
     for(const rock of rocks){rock.y+=rock.vy*dt;rock.x+=rock.vx*dt;rock.spin+=rock.rot*dt;}
     for(const orb of orbs){orb.y+=orb.vy*dt;orb.phase+=dt*4;}
     for(let i=rocks.length-1;i>=0;i--){const rock=rocks[i];if(hit(ship,rock,4)){rocks.splice(i,1);lives--;status.textContent='Asteroid impact! '+lives+' shields left.';updateHud();if(lives<=0){finish(false);return;}}else if(rock.y-rock.r>H)rocks.splice(i,1);}
@@ -49,26 +49,24 @@
   pauseButton.addEventListener('click',pause);restartButton.addEventListener('click',start);
   function setDirection(which,value){if(which==='left')left=value;else right=value;}
   for(const [button,which] of [[leftButton,'left'],[rightButton,'right']]){button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);setDirection(which,true);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,()=>setDirection(which,false));}
-  function updatePointerTarget(clientX){
+  function updatePointerTarget(clientX,clientY){
     const rect=canvas.getBoundingClientRect();
+    if(clientX<rect.left||clientX>rect.right||clientY<rect.top||clientY>rect.bottom)return;
     targetX=Math.max(28,Math.min(W-28,(clientX-rect.left)/rect.width*W));
+    targetY=Math.max(45,Math.min(H-38,(clientY-rect.top)/rect.height*H));
     pointerActive=true;
   }
-  canvas.addEventListener('mousemove',e=>{
-    if(state==='running')updatePointerTarget(e.clientX);
-  });
-  canvas.addEventListener('mouseenter',e=>{
-    if(state==='running')updatePointerTarget(e.clientX);
+  window.addEventListener('mousemove',e=>{
+    if(state==='running')updatePointerTarget(e.clientX,e.clientY);
   });
   canvas.addEventListener('touchstart',e=>{
     if(state!=='running'||!e.touches.length)return;
-    e.preventDefault();updatePointerTarget(e.touches[0].clientX);
+    e.preventDefault();updatePointerTarget(e.touches[0].clientX,e.touches[0].clientY);
   },{passive:false});
   canvas.addEventListener('touchmove',e=>{
     if(state!=='running'||!e.touches.length)return;
-    e.preventDefault();updatePointerTarget(e.touches[0].clientX);
+    e.preventDefault();updatePointerTarget(e.touches[0].clientX,e.touches[0].clientY);
   },{passive:false});
-  canvas.addEventListener('mouseleave',()=>{pointerActive=false;});
   canvas.addEventListener('touchend',()=>{pointerActive=false;});
   canvas.addEventListener('touchcancel',()=>{pointerActive=false;});
   document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(e.code==='ArrowLeft'||e.code==='ArrowRight'||e.code==='KeyA'||e.code==='KeyD'){keys[e.code]=true;pointerActive=false;}if((e.code==='KeyP'||e.code==='Escape')&&state==='running')pause();if(e.code==='Enter'&&(state==='ready'||state==='over'||state==='won'))start();});
