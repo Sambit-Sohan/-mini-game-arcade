@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d'),playerShip=document.getElementById('playerShip');
+  const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
   const $=id=>document.getElementById(id);
   const timerEl=$('timer'),scoreEl=$('score'),livesEl=$('lives'),bestEl=$('bestScore');
   const overlay=$('overlay'),eyebrow=$('overlayEyebrow'),title=$('overlayTitle'),message=$('overlayText');
@@ -38,37 +38,39 @@
   }
   function spawnOrbFn(){orbs.push({x:30+Math.random()*(W-60),y:-20,r:10,vy:150+elapsed*2,phase:0});spawnOrb=2.2+Math.random()*1.6;}
   function pathShip(){ctx.save();ctx.translate(ship.x,ship.y);ctx.shadowColor='#c8f36b';ctx.shadowBlur=22;ctx.fillStyle='#c8f36b';ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-32);ctx.lineTo(25,23);ctx.lineTo(0,14);ctx.lineTo(-25,23);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#8bd8ef';ctx.strokeStyle='#e7fbff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,-5,8,12,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#ff91ad';ctx.beginPath();ctx.moveTo(-9,23);ctx.lineTo(0,43+Math.sin(elapsed*24)*5);ctx.lineTo(9,23);ctx.closePath();ctx.fill();ctx.restore();}
-  function draw(){playerShip.style.left=(ship.x/W*100)+'%';playerShip.style.top=(ship.y/H*100)+'%';ctx.clearRect(0,0,W,H);const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#111a35');bg.addColorStop(1,'#202747');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  function draw(){ctx.clearRect(0,0,W,H);const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#111a35');bg.addColorStop(1,'#202747');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
     for(const star of stars){ctx.globalAlpha=.35+.45*(.5+.5*Math.sin(elapsed*1.5+star.phase));ctx.fillStyle='#eaf4ff';ctx.beginPath();ctx.arc(star.x,(star.y+elapsed*(10+star.r*5))%(H+5),star.r,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
     for(const rock of rocks){ctx.save();ctx.translate(rock.x,rock.y);ctx.rotate(rock.spin);ctx.fillStyle='#a5abc0';ctx.strokeStyle='#d4d9e8';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<9;i++){const a=i*Math.PI*2/9,r=rock.r*(.78+(i%3)*.1);if(i===0)ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);else ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#707b98';ctx.beginPath();ctx.arc(-rock.r*.2,-rock.r*.1,rock.r*.2,0,Math.PI*2);ctx.fill();ctx.restore();}
     for(const orb of orbs){ctx.save();ctx.translate(orb.x,orb.y);ctx.shadowColor='#c8f36b';ctx.shadowBlur=18;ctx.fillStyle='#c8f36b';ctx.beginPath();ctx.arc(0,0,orb.r+Math.sin(orb.phase)*2,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-3,-3,3,0,Math.PI*2);ctx.fill();ctx.restore();}
-    ctx.fillStyle='#c8f36b';ctx.font='bold 13px Arial';ctx.fillText('SURVIVE THE FIELD',22,30);
+    pathShip();ctx.fillStyle='#c8f36b';ctx.font='bold 13px Arial';ctx.fillText('SURVIVE THE FIELD',22,30);
   }
   function loop(timestamp){if(state!=='running')return;if(!last)last=timestamp;const dt=Math.min((timestamp-last)/1000,.035);last=timestamp;update(dt);draw();if(state==='running')raf=requestAnimationFrame(loop);}
   startButton.addEventListener('click',()=>{if(state==='paused')pause();else start();});
   pauseButton.addEventListener('click',pause);restartButton.addEventListener('click',start);
   function setDirection(which,value){if(which==='left')left=value;else right=value;}
   for(const [button,which] of [[leftButton,'left'],[rightButton,'right']]){button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);setDirection(which,true);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,()=>setDirection(which,false));}
-  const stageWrap=canvas.parentElement;
-  function setPointerTarget(e){
+  function updatePointerTarget(clientX){
     const rect=canvas.getBoundingClientRect();
-    const inside=e.clientX>=rect.left&&e.clientX<=rect.right&&e.clientY>=rect.top&&e.clientY<=rect.bottom;
-    if(!inside)return false;
-    targetX=Math.max(28,Math.min(W-28,(e.clientX-rect.left)/rect.width*W));
+    targetX=Math.max(28,Math.min(W-28,(clientX-rect.left)/rect.width*W));
     pointerActive=true;
-    return true;
   }
-  stageWrap.addEventListener('pointerdown',e=>{
-    if(state!=='running')return;
-    setPointerTarget(e);
-    if(e.pointerType!=='mouse'&&stageWrap.setPointerCapture)stageWrap.setPointerCapture(e.pointerId);
+  canvas.addEventListener('mousemove',e=>{
+    if(state==='running')updatePointerTarget(e.clientX);
   });
-  document.addEventListener('pointermove',e=>{
-    if(state!=='running')return;
-    if(e.pointerType==='mouse'||e.pointerType==='touch'||e.pointerType==='pen')setPointerTarget(e);
-  },{passive:true});
-  stageWrap.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')pointerActive=false;});
-  stageWrap.addEventListener('pointercancel',()=>{pointerActive=false;});
+  canvas.addEventListener('mouseenter',e=>{
+    if(state==='running')updatePointerTarget(e.clientX);
+  });
+  canvas.addEventListener('touchstart',e=>{
+    if(state!=='running'||!e.touches.length)return;
+    e.preventDefault();updatePointerTarget(e.touches[0].clientX);
+  },{passive:false});
+  canvas.addEventListener('touchmove',e=>{
+    if(state!=='running'||!e.touches.length)return;
+    e.preventDefault();updatePointerTarget(e.touches[0].clientX);
+  },{passive:false});
+  canvas.addEventListener('mouseleave',()=>{pointerActive=false;});
+  canvas.addEventListener('touchend',()=>{pointerActive=false;});
+  canvas.addEventListener('touchcancel',()=>{pointerActive=false;});
   document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(e.code==='ArrowLeft'||e.code==='ArrowRight'||e.code==='KeyA'||e.code==='KeyD'){keys[e.code]=true;pointerActive=false;}if((e.code==='KeyP'||e.code==='Escape')&&state==='running')pause();if(e.code==='Enter'&&(state==='ready'||state==='over'||state==='won'))start();});
   document.addEventListener('keyup',e=>{keys[e.code]=false;});
   window.addEventListener('blur',()=>{left=false;right=false;keys={};if(state==='running')pause();});
