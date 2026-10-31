@@ -1,8 +1,11 @@
 (() => {
 'use strict';
-const $=id=>document.getElementById(id),canvas=$('gameCanvas'),ctx=canvas.getContext('2d'),nextC=$('nextCanvas').getContext('2d'),holdC=$('holdCanvas').getContext('2d');
+const $=id=>document.getElementById(id),canvas=$('gameCanvas');
+if(!canvas){throw new Error('Tetris canvas is missing.');}
+const ctx=canvas.getContext('2d'),nextC=$('nextCanvas').getContext('2d'),holdC=$('holdCanvas').getContext('2d');
 const W=10,H=20,SH={I:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],J:[[1,0,0],[1,1,1],[0,0,0]],L:[[0,0,1],[1,1,1],[0,0,0]],O:[[1,1],[1,1]],S:[[0,1,1],[1,1,0],[0,0,0]],T:[[0,1,0],[1,1,1],[0,0,0]],Z:[[1,1,0],[0,1,1],[0,0,0]]},COL={I:'#65d9e8',J:'#7897ff',L:'#ffad65',O:'#f5d76e',S:'#8bdb91',T:'#c69aff',Z:'#ff829b'};
-let board=[],bag=[],queue=[],piece=null,held=null,canHold=true,state='ready',score=0,lines=0,level=1,best=Number(localStorage.getItem('miniArcadeTetrisBest')||0),clock=0,last=0,soft=false;
+let board=[],bag=[],queue=[],piece=null,held=null,canHold=true,state='ready',score=0,lines=0,level=1,best=0,clock=0,last=0,soft=false;
+try{best=Number(localStorage.getItem('miniArcadeTetrisBest')||0)||0;}catch(_){best=0;}
 $('bestScore').textContent=best.toLocaleString();
 function shuffle(){bag=Object.keys(SH);for(let i=bag.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}}
 function take(){if(!bag.length)shuffle();return bag.pop();}
@@ -20,14 +23,17 @@ function cell(c,x,y,s,t,a){c.save();c.globalAlpha=a===undefined?1:a;c.fillStyle=
 function draw(){let s=canvas.width/W;ctx.fillStyle='#0b1020';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#ffffff0c';for(let x=1;x<W;x++){ctx.beginPath();ctx.moveTo(x*s,0);ctx.lineTo(x*s,canvas.height);ctx.stroke();}for(let y=1;y<H;y++){ctx.beginPath();ctx.moveTo(0,y*s);ctx.lineTo(canvas.width,y*s);ctx.stroke();}for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(board[y][x])cell(ctx,x*s,y*s,s,board[y][x]);if(piece){let g={x:piece.x,y:piece.y,m:piece.m};while(!hit(g,0,1,g.m))g.y++;for(let y=0;y<g.m.length;y++)for(let x=0;x<g.m[y].length;x++)if(g.m[y][x]&&g.y+y>=0)cell(ctx,(g.x+x)*s,(g.y+y)*s,s,piece.type,.2);for(let y=0;y<piece.m.length;y++)for(let x=0;x<piece.m[y].length;x++)if(piece.m[y][x]&&piece.y+y>=0)cell(ctx,(piece.x+x)*s,(piece.y+y)*s,s,piece.type);}}
 function preview(c,type){c.clearRect(0,0,c.canvas.width,c.canvas.height);if(!type)return;let m=SH[type],s=18,ox=(c.canvas.width-m[0].length*s)/2,oy=(c.canvas.height-m.length*s)/2;for(let y=0;y<m.length;y++)for(let x=0;x<m[y].length;x++)if(m[y][x])cell(c,ox+x*s,oy+y*s,s,type);}
 function previews(){preview(nextC,queue[0]);preview(holdC,held);}
-function finish(){state='over';$('pauseButton').disabled=true;$('statusText').textContent='GAME OVER';if(score>best){best=score;localStorage.setItem('miniArcadeTetrisBest',String(best));$('bestScore').textContent=best.toLocaleString();$('overlayEyebrow').textContent='NEW PERSONAL BEST';}else $('overlayEyebrow').textContent='STACK COMPLETE';$('overlayTitle').textContent='Nice run!';$('overlayMessage').textContent='You scored '+score.toLocaleString()+' points and cleared '+lines+' lines. Ready for another round?';$('startButton').textContent='Play again →';$('overlay').classList.remove('hidden');draw();}
+function finish(){state='over';$('pauseButton').disabled=true;$('statusText').textContent='GAME OVER';if(score>best){best=score;try{localStorage.setItem('miniArcadeTetrisBest',String(best));}catch(_){}$('bestScore').textContent=best.toLocaleString();$('overlayEyebrow').textContent='NEW PERSONAL BEST';}else $('overlayEyebrow').textContent='STACK COMPLETE';$('overlayTitle').textContent='Nice run!';$('overlayMessage').textContent='You scored '+score.toLocaleString()+' points and cleared '+lines+' lines. Ready for another round?';$('startButton').textContent='Play again →';$('overlay').classList.remove('hidden');draw();}
 function start(){board=fresh();bag=[];queue=[];held=null;score=0;lines=0;level=1;clock=0;fill();spawn();state='playing';$('overlay').classList.add('hidden');$('pauseButton').disabled=false;$('pauseButton').textContent='Pause';$('statusText').textContent='PLAYING';hud();last=performance.now();requestAnimationFrame(loop);draw();}
 function pause(){if(state!=='playing')return;state='paused';$('overlayEyebrow').textContent='TAKE A BREATHER';$('overlayTitle').textContent='Game paused';$('overlayMessage').textContent='Your stack is waiting. Resume when you are ready.';$('startButton').textContent='Resume game →';$('overlay').classList.remove('hidden');$('pauseButton').textContent='Resume';$('statusText').textContent='PAUSED';}
 function resume(){if(state!=='paused')return;state='playing';$('overlay').classList.add('hidden');$('pauseButton').textContent='Pause';$('statusText').textContent='PLAYING';last=performance.now();requestAnimationFrame(loop);}
-function loop(now){if(state!=='playing')return;let dt=Math.min((now-last)/1000,.05);last=now;clock+=dt;let interval=Math.max(.09,.8-(level-1)*.065);if(clock>=(soft?.045:interval)){if(!move(0,1))lock();else if(soft)score++;clock=0;hud();}draw();requestAnimationFrame(loop);}
+function loop(now){if(state!=='playing')return;let dt=Math.min((now-last)/1000,.05);last=now;clock+=dt;let interval=Math.max(.09,.8-(level-1)*.065);if(clock >= (soft ? 0.045 : interval)){if(!move(0,1))lock();else if(soft)score++;clock=0;hud();}draw();requestAnimationFrame(loop);}
 function act(a){if(state!=='playing')return;if(a==='left')move(-1,0);if(a==='right')move(1,0);if(a==='down'){if(move(0,1)){score++;hud();}else lock();}if(a==='rotate')rotate();if(a==='drop')hardDrop();draw();}
 document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','Space'].includes(e.code))e.preventDefault();if(e.code==='Enter'&&(state==='ready'||state==='over'))start();else if(e.code==='Escape'&&state==='playing')pause();else if(e.code==='Escape'&&state==='paused')resume();else if(e.code==='ArrowLeft')act('left');else if(e.code==='ArrowRight')act('right');else if(e.code==='ArrowDown')act('down');else if(e.code==='ArrowUp'||e.code==='KeyX')act('rotate');else if(e.code==='Space')act('drop');else if(e.code==='KeyC'||e.code==='ShiftLeft'||e.code==='ShiftRight')hold();});
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();act(b.dataset.action);}));
-$('startButton').addEventListener('click',()=>state==='paused'?resume():start());$('pauseButton').addEventListener('click',()=>state==='paused'?resume():pause());$('restartButton').addEventListener('click',start);
+const startButton=$('startButton'),pauseButton=$('pauseButton'),restartButton=$('restartButton');
+startButton.addEventListener('click',()=>{if(state==='paused')resume();else start();});
+pauseButton.addEventListener('click',()=>{if(state==='paused')resume();else pause();});
+restartButton.addEventListener('click',start);
 board=fresh();fill();previews();draw();hud();
 })();
