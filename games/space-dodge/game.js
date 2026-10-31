@@ -49,7 +49,26 @@
   pauseButton.addEventListener('click',pause);restartButton.addEventListener('click',start);
   function setDirection(which,value){if(which==='left')left=value;else right=value;}
   for(const [button,which] of [[leftButton,'left'],[rightButton,'right']]){button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);setDirection(which,true);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,()=>setDirection(which,false));}
-  function setPointerTarget(e){const rect=canvas.getBoundingClientRect();targetX=Math.max(28,Math.min(W-28,(e.clientX-rect.left)/rect.width*W));pointerActive=true;}canvas.addEventListener('pointerdown',e=>{if(state!=='running')return;setPointerTarget(e);if(e.pointerType!=='mouse')canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(state!=='running')return;if(e.pointerType==='mouse'||e.pointerType==='touch'||e.pointerType==='pen')setPointerTarget(e);});canvas.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')pointerActive=false;});canvas.addEventListener('pointercancel',()=>{pointerActive=false;});canvas.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')pointerActive=false;});
+  const stageWrap=canvas.parentElement;
+  function setPointerTarget(e){
+    const rect=canvas.getBoundingClientRect();
+    const inside=e.clientX>=rect.left&&e.clientX<=rect.right&&e.clientY>=rect.top&&e.clientY<=rect.bottom;
+    if(!inside)return false;
+    targetX=Math.max(28,Math.min(W-28,(e.clientX-rect.left)/rect.width*W));
+    pointerActive=true;
+    return true;
+  }
+  stageWrap.addEventListener('pointerdown',e=>{
+    if(state!=='running')return;
+    setPointerTarget(e);
+    if(e.pointerType!=='mouse'&&stageWrap.setPointerCapture)stageWrap.setPointerCapture(e.pointerId);
+  });
+  document.addEventListener('pointermove',e=>{
+    if(state!=='running')return;
+    if(e.pointerType==='mouse'||e.pointerType==='touch'||e.pointerType==='pen')setPointerTarget(e);
+  },{passive:true});
+  stageWrap.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')pointerActive=false;});
+  stageWrap.addEventListener('pointercancel',()=>{pointerActive=false;});
   document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(e.code==='ArrowLeft'||e.code==='ArrowRight'||e.code==='KeyA'||e.code==='KeyD'){keys[e.code]=true;pointerActive=false;}if((e.code==='KeyP'||e.code==='Escape')&&state==='running')pause();if(e.code==='Enter'&&(state==='ready'||state==='over'||state==='won'))start();});
   document.addEventListener('keyup',e=>{keys[e.code]=false;});
   window.addEventListener('blur',()=>{left=false;right=false;keys={};if(state==='running')pause();});
